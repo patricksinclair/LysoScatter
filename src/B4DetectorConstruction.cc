@@ -34,13 +34,18 @@ G4GlobalMagFieldMessenger *B4DetectorConstruction::fMagFieldMessenger = 0;
 
 B4DetectorConstruction::B4DetectorConstruction()
         : G4VUserDetectorConstruction(),
-          cAbsorberPV(0),
-          NAbsorberPV(0),
-          EAbsorberPV(0),
-          SAbsorberPV(0),
-          WAbsorberPV(0),
+          cAbsorberPV_A(0),
+          NAbsorberPV_A(0),
+          EAbsorberPV_A(0),
+          SAbsorberPV_A(0),
+          WAbsorberPV_A(0),
+          cAbsorberPV_B(0),
+          NAbsorberPV_B(0),
+          EAbsorberPV_B(0),
+          SAbsorberPV_B(0),
+          WAbsorberPV_B(0),
 
-          cFoilPV(0),
+          cFoilPV_A(0),
 
           fGapPV(0),
           fCheckOverlaps(true) {
@@ -92,14 +97,15 @@ G4VPhysicalVolume *B4DetectorConstruction::DefineVolumes() {
     // Geometry parameters
 
     //World size
-    G4double worldSizeXY = 4. * cm;
-    G4double worldSizeZ = 4. * cm;
+    G4double worldSizeXY = 30. * cm;
+    G4double worldSizeZ = 30. * cm;
 
     //Crystal Parameters
-    G4double cryst_dX = 3 * mm, cryst_dY = 3 * mm, cryst_dZ = 22 * mm;
+    G4double cryst_dX = 4 * mm, cryst_dY = 4 * mm, cryst_dZ = 22 * mm;
     G4double foilThickness = 1 * mm;
     G4double outBox_dX = cryst_dX+foilThickness, outBox_dY = cryst_dY+foilThickness, outBox_dZ = cryst_dZ;
 
+    G4double zPos = 10.*cm;
 
     // Get materials
     G4Material* defaultMaterial = G4Material::GetMaterial("G4_AIR");
@@ -107,10 +113,7 @@ G4VPhysicalVolume *B4DetectorConstruction::DefineVolumes() {
     G4Material* foil_mat = G4Material::GetMaterial("Al");
 
 
-
-    //
-    // World
-    //
+    // Creation of World volume where the apparatus will be placed.
     G4VSolid *worldS
             = new G4Box("World",           // its name
                         worldSizeXY / 2, worldSizeXY / 2, worldSizeZ / 2); // its size
@@ -132,18 +135,15 @@ G4VPhysicalVolume *B4DetectorConstruction::DefineVolumes() {
                     0,                // copy number
                     fCheckOverlaps);  // checking overlaps
 
-
-
     //
-    //Crystals wrapped in foil
-    //
+    //Crystals wrapped in foil.  These will form the basis of the simulated experimental apparatus
     G4double gap = 0. * mm;        //a gap for wrapping
     //Foil wrapping
     G4Box* outerBox = new G4Box("Outerbox", outBox_dX/2, outBox_dY/2, outBox_dZ/2);
     G4Box* innerBox = new G4Box("Innerbox", cryst_dX/2, cryst_dY/2, cryst_dZ/2+5*mm);
 
     G4SubtractionSolid* foilS = new G4SubtractionSolid("Foilwrapping", outerBox, innerBox);
-    G4double foil_xpos = cryst_dX+2*foilThickness+gap, foil_ypos = cryst_dY+2*foilThickness+gap;
+    //G4double foil_xpos = cryst_dX+2*foilThickness+gap, foil_ypos = cryst_dY+2*foilThickness+gap;
 
     G4double cryst_xpos = cryst_dX + gap, cryst_ypos = cryst_dY + gap;
     G4Box* crystalS = new G4Box("crystal", cryst_dX/2, cryst_dY/2, cryst_dZ/2);
@@ -160,41 +160,43 @@ G4VPhysicalVolume *B4DetectorConstruction::DefineVolumes() {
                     foil_mat,  // its material
                     "foilwrap");   // its name
 
-    cAbsorberPV
+
+    //Placement of detector A elements
+    cAbsorberPV_A
             = new G4PVPlacement(
             0,                // no rotation
-            G4ThreeVector(),  // at (0,0,0)
+            G4ThreeVector(0, 0, zPos),  // at (0,0,0)
             crystalLV,          // its logical volume
-            "crystalPV",    // its name
+            "crystalPV_A",    // its name
             worldLV,          // its mother  volume
             false,            // no boolean operation
             0,                // copy number
             fCheckOverlaps);  // checking overlaps
-    cFoilPV
+    cFoilPV_A
             = new G4PVPlacement(
             0,
-            G4ThreeVector(),
+            G4ThreeVector(0, 0, zPos),
             foilLV,
-            "foilPV",
+            "foilPV_A",
             worldLV,
             false,
             0,
             fCheckOverlaps);
 
-    NAbsorberPV
+    NAbsorberPV_A
             = new G4PVPlacement(
             0,                // no rotation
-            G4ThreeVector(0, cryst_ypos+foilThickness, 0), // at (0,0,0)
+            G4ThreeVector(0, cryst_ypos+foilThickness, zPos), // at (0,0,0)
             crystalLV,          // its logical volume
             "crystalPV",    // its name
             worldLV,          // its mother  volume
             false,            // no boolean operation
             1,                // copy number
             fCheckOverlaps);  // checking overlaps
-    nFoilPV
+    nFoilPV_A
             = new G4PVPlacement(
             0,
-            G4ThreeVector(0, cryst_ypos+foilThickness, 0),
+            G4ThreeVector(0, cryst_ypos+foilThickness, zPos),
             foilLV,
             "foilPV",
             worldLV,
@@ -202,20 +204,20 @@ G4VPhysicalVolume *B4DetectorConstruction::DefineVolumes() {
             1,
             fCheckOverlaps);
 
-    NEAbsorberPV
+    NEAbsorberPV_A
             = new G4PVPlacement(
             0,                // no rotation
-            G4ThreeVector(cryst_xpos+foilThickness, cryst_ypos+foilThickness, 0), // at (0,0,0)
+            G4ThreeVector(cryst_xpos+foilThickness, cryst_ypos+foilThickness, zPos), // at (0,0,0)
             crystalLV,          // its logical volume
             "crystalPV",    // its name
             worldLV,          // its mother  volume
             false,            // no boolean operation
             2,                // copy number
             fCheckOverlaps);  // checking overlaps
-    neFoilPV
+    neFoilPV_A
             = new G4PVPlacement(
             0,
-            G4ThreeVector(cryst_xpos+foilThickness, cryst_ypos+foilThickness, 0),
+            G4ThreeVector(cryst_xpos+foilThickness, cryst_ypos+foilThickness, zPos),
             foilLV,
             "foilPV",
             worldLV,
@@ -224,20 +226,20 @@ G4VPhysicalVolume *B4DetectorConstruction::DefineVolumes() {
             fCheckOverlaps);
 
 
-    EAbsorberPV
+    EAbsorberPV_A
             = new G4PVPlacement(
             0,                // no rotation
-            G4ThreeVector(cryst_xpos+foilThickness, 0, 0),  // at (0,0,0)
+            G4ThreeVector(cryst_xpos+foilThickness, 0, zPos),  // at (0,0,0)
             crystalLV,          // its logical volume
             "crystalPV",    // its name
             worldLV,          // its mother  volume
             false,            // no boolean operation
             3,                // copy number
             fCheckOverlaps);  // checking overlaps
-    eFoilPV
+    eFoilPV_A
             = new G4PVPlacement(
             0,
-            G4ThreeVector(cryst_xpos+foilThickness, 0, 0),
+            G4ThreeVector(cryst_xpos+foilThickness, 0, zPos),
             foilLV,
             "foilPV",
             worldLV,
@@ -245,20 +247,20 @@ G4VPhysicalVolume *B4DetectorConstruction::DefineVolumes() {
             3,
             fCheckOverlaps);
 
-    SEAbsorberPV
+    SEAbsorberPV_A
             = new G4PVPlacement(
             0,                // no rotation
-            G4ThreeVector(cryst_xpos+foilThickness, -cryst_ypos-foilThickness, 0), // at (0,0,0)
+            G4ThreeVector(cryst_xpos+foilThickness, -cryst_ypos-foilThickness, zPos), // at (0,0,0)
             crystalLV,          // its logical volume
             "crystalPV",    // its name
             worldLV,          // its mother  volume
             false,            // no boolean operation
             4,                // copy number
             fCheckOverlaps);  // checking overlaps
-    seFoilPV
+    seFoilPV_A
             = new G4PVPlacement(
             0,
-            G4ThreeVector(cryst_xpos+foilThickness, -cryst_ypos-foilThickness, 0),
+            G4ThreeVector(cryst_xpos+foilThickness, -cryst_ypos-foilThickness, zPos),
             foilLV,
             "foilPV",
             worldLV,
@@ -266,20 +268,20 @@ G4VPhysicalVolume *B4DetectorConstruction::DefineVolumes() {
             4,
             fCheckOverlaps);
 
-    SAbsorberPV
+    SAbsorberPV_A
             = new G4PVPlacement(
             0,                // no rotation
-            G4ThreeVector(0, -cryst_ypos-foilThickness, 0),  // at (0,0,0)
+            G4ThreeVector(0, -cryst_ypos-foilThickness, zPos),  // at (0,0,0)
             crystalLV,          // its logical volume
             "crystalPV",    // its name
             worldLV,          // its mother  volume
             false,            // no boolean operation
             5,                // copy number
             fCheckOverlaps);  // checking overlaps
-    sFoilPV
+    sFoilPV_A
             = new G4PVPlacement(
             0,
-            G4ThreeVector(0, -cryst_ypos-foilThickness, 0),
+            G4ThreeVector(0, -cryst_ypos-foilThickness, zPos),
             foilLV,
             "foilPV",
             worldLV,
@@ -287,20 +289,20 @@ G4VPhysicalVolume *B4DetectorConstruction::DefineVolumes() {
             5,
             fCheckOverlaps);
 
-    SWAbsorberPV
+    SWAbsorberPV_A
             = new G4PVPlacement(
             0,                // no rotation
-            G4ThreeVector(-cryst_xpos-foilThickness, -cryst_ypos-foilThickness, 0), // at (0,0,0)
+            G4ThreeVector(-cryst_xpos-foilThickness, -cryst_ypos-foilThickness, zPos), // at (0,0,0)
             crystalLV,          // its logical volume
             "crystalPV",    // its name
             worldLV,          // its mother  volume
             false,            // no boolean operation
             6,                // copy number
             fCheckOverlaps);  // checking overlaps
-    swFoilPV
+    swFoilPV_A
             = new G4PVPlacement(
             0,
-            G4ThreeVector(-cryst_xpos-foilThickness, -cryst_ypos-foilThickness, 0),
+            G4ThreeVector(-cryst_xpos-foilThickness, -cryst_ypos-foilThickness, zPos),
             foilLV,
             "foilPV",
             worldLV,
@@ -308,20 +310,20 @@ G4VPhysicalVolume *B4DetectorConstruction::DefineVolumes() {
             6,
             fCheckOverlaps);
 
-    WAbsorberPV
+    WAbsorberPV_A
             = new G4PVPlacement(
             0,                // no rotation
-            G4ThreeVector(-cryst_xpos-foilThickness, 0, 0),  // at (0,0,0)
+            G4ThreeVector(-cryst_xpos-foilThickness, 0, zPos),  // at (0,0,0)
             crystalLV,          // its logical volume
             "crystalPV",    // its name
             worldLV,          // its mother  volume
             false,            // no boolean operation
             7,                // copy number
             fCheckOverlaps);  // checking overlaps
-    wFoilPV
+    wFoilPV_A
             = new G4PVPlacement(
             0,
-            G4ThreeVector(-cryst_xpos-foilThickness, 0, 0),
+            G4ThreeVector(-cryst_xpos-foilThickness, 0, zPos),
             foilLV,
             "foilPV",
             worldLV,
@@ -329,20 +331,20 @@ G4VPhysicalVolume *B4DetectorConstruction::DefineVolumes() {
             7,
             fCheckOverlaps);
 
-    NWAbsorberPV
+    NWAbsorberPV_A
             = new G4PVPlacement(
             0,                // no rotation
-            G4ThreeVector(-cryst_xpos-foilThickness, cryst_ypos+foilThickness, 0), // at (0,0,0)
+            G4ThreeVector(-cryst_xpos-foilThickness, cryst_ypos+foilThickness, zPos), // at (0,0,0)
             crystalLV,          // its logical volume
             "crystalPV",    // its name
             worldLV,          // its mother  volume
             false,            // no boolean operation
             8,                // copy number
             fCheckOverlaps);  // checking overlaps
-    nwFoilPV
+    nwFoilPV_A
             = new G4PVPlacement(
             0,
-            G4ThreeVector(-cryst_xpos-foilThickness, cryst_ypos+foilThickness, 0),
+            G4ThreeVector(-cryst_xpos-foilThickness, cryst_ypos+foilThickness, zPos),
             foilLV,
             "foilPV",
             worldLV,
@@ -350,6 +352,200 @@ G4VPhysicalVolume *B4DetectorConstruction::DefineVolumes() {
             8,
             fCheckOverlaps);
 
+
+    //////////////////////////////////////////////////////////////////////
+    //Placement of detector B elements
+    cAbsorberPV_B
+            = new G4PVPlacement(
+            0,                // no rotation
+            G4ThreeVector(0, 0, -zPos),  // at (0,0,0)
+            crystalLV,          // its logical volume
+            "crystalPV",    // its name
+            worldLV,          // its mother  volume
+            false,            // no boolean operation
+            9,                // copy number
+            fCheckOverlaps);  // checking overlaps
+    cFoilPV_B
+            = new G4PVPlacement(
+            0,
+            G4ThreeVector(0, 0, -zPos),
+            foilLV,
+            "foilPV",
+            worldLV,
+            false,
+            9,
+            fCheckOverlaps);
+
+    NAbsorberPV_B
+            = new G4PVPlacement(
+            0,                // no rotation
+            G4ThreeVector(0, cryst_ypos+foilThickness, -zPos), // at (0,0,0)
+            crystalLV,          // its logical volume
+            "crystalPV",    // its name
+            worldLV,          // its mother  volume
+            false,            // no boolean operation
+            10,                // copy number
+            fCheckOverlaps);  // checking overlaps
+    nFoilPV_B
+            = new G4PVPlacement(
+            0,
+            G4ThreeVector(0, cryst_ypos+foilThickness, -zPos),
+            foilLV,
+            "foilPV",
+            worldLV,
+            false,
+            10,
+            fCheckOverlaps);
+
+    NEAbsorberPV_B
+            = new G4PVPlacement(
+            0,                // no rotation
+            G4ThreeVector(cryst_xpos+foilThickness, cryst_ypos+foilThickness, -zPos), // at (0,0,0)
+            crystalLV,          // its logical volume
+            "crystalPV",    // its name
+            worldLV,          // its mother  volume
+            false,            // no boolean operation
+            11,                // copy number
+            fCheckOverlaps);  // checking overlaps
+    neFoilPV_B
+            = new G4PVPlacement(
+            0,
+            G4ThreeVector(cryst_xpos+foilThickness, cryst_ypos+foilThickness, -zPos),
+            foilLV,
+            "foilPV",
+            worldLV,
+            false,
+            11,
+            fCheckOverlaps);
+
+
+    EAbsorberPV_B
+            = new G4PVPlacement(
+            0,                // no rotation
+            G4ThreeVector(cryst_xpos+foilThickness, 0, -zPos),  // at (0,0,0)
+            crystalLV,          // its logical volume
+            "crystalPV",    // its name
+            worldLV,          // its mother  volume
+            false,            // no boolean operation
+            12,                // copy number
+            fCheckOverlaps);  // checking overlaps
+    eFoilPV_B
+            = new G4PVPlacement(
+            0,
+            G4ThreeVector(cryst_xpos+foilThickness, 0, -zPos),
+            foilLV,
+            "foilPV",
+            worldLV,
+            false,
+            12,
+            fCheckOverlaps);
+
+    SEAbsorberPV_B
+            = new G4PVPlacement(
+            0,                // no rotation
+            G4ThreeVector(cryst_xpos+foilThickness, -cryst_ypos-foilThickness, -zPos), // at (0,0,0)
+            crystalLV,          // its logical volume
+            "crystalPV",    // its name
+            worldLV,          // its mother  volume
+            false,            // no boolean operation
+            13,                // copy number
+            fCheckOverlaps);  // checking overlaps
+    seFoilPV_B
+            = new G4PVPlacement(
+            0,
+            G4ThreeVector(cryst_xpos+foilThickness, -cryst_ypos-foilThickness, -zPos),
+            foilLV,
+            "foilPV",
+            worldLV,
+            false,
+            13,
+            fCheckOverlaps);
+
+    SAbsorberPV_B
+            = new G4PVPlacement(
+            0,                // no rotation
+            G4ThreeVector(0, -cryst_ypos-foilThickness, -zPos),  // at (0,0,0)
+            crystalLV,          // its logical volume
+            "crystalPV",    // its name
+            worldLV,          // its mother  volume
+            false,            // no boolean operation
+            14,                // copy number
+            fCheckOverlaps);  // checking overlaps
+    sFoilPV_B
+            = new G4PVPlacement(
+            0,
+            G4ThreeVector(0, -cryst_ypos-foilThickness, zPos),
+            foilLV,
+            "foilPV",
+            worldLV,
+            false,
+            14,
+            fCheckOverlaps);
+
+    SWAbsorberPV_B
+            = new G4PVPlacement(
+            0,                // no rotation
+            G4ThreeVector(-cryst_xpos-foilThickness, -cryst_ypos-foilThickness, -zPos), // at (0,0,0)
+            crystalLV,          // its logical volume
+            "crystalPV",    // its name
+            worldLV,          // its mother  volume
+            false,            // no boolean operation
+            15,                // copy number
+            fCheckOverlaps);  // checking overlaps
+    swFoilPV_B
+            = new G4PVPlacement(
+            0,
+            G4ThreeVector(-cryst_xpos-foilThickness, -cryst_ypos-foilThickness, -zPos),
+            foilLV,
+            "foilPV",
+            worldLV,
+            false,
+            15,
+            fCheckOverlaps);
+
+    WAbsorberPV_B
+            = new G4PVPlacement(
+            0,                // no rotation
+            G4ThreeVector(-cryst_xpos-foilThickness, 0, -zPos),  // at (0,0,0)
+            crystalLV,          // its logical volume
+            "crystalPV",    // its name
+            worldLV,          // its mother  volume
+            false,            // no boolean operation
+            16,                // copy number
+            fCheckOverlaps);  // checking overlaps
+    wFoilPV_B
+            = new G4PVPlacement(
+            0,
+            G4ThreeVector(-cryst_xpos-foilThickness, 0, -zPos),
+            foilLV,
+            "foilPV",
+            worldLV,
+            false,
+            16,
+            fCheckOverlaps);
+
+    NWAbsorberPV_B
+            = new G4PVPlacement(
+            0,                // no rotation
+            G4ThreeVector(-cryst_xpos-foilThickness, cryst_ypos+foilThickness, -zPos), // at (0,0,0)
+            crystalLV,          // its logical volume
+            "crystalPV",    // its name
+            worldLV,          // its mother  volume
+            false,            // no boolean operation
+            17,                // copy number
+            fCheckOverlaps);  // checking overlaps
+    nwFoilPV_B
+            = new G4PVPlacement(
+            0,
+            G4ThreeVector(-cryst_xpos-foilThickness, cryst_ypos+foilThickness, -zPos),
+            foilLV,
+            "foilPV",
+            worldLV,
+            false,
+            17,
+            fCheckOverlaps);
+
+/////////////////////////////////////////////////////////////////////////////
     worldLV->SetVisAttributes(G4VisAttributes::Invisible);
 
     G4VisAttributes *simpleBoxVisAtt = new G4VisAttributes(G4Colour(1.0, 1.0, 1.0));

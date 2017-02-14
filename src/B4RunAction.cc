@@ -27,22 +27,36 @@ B4RunAction::B4RunAction()
     // Book histograms, ntuple
 
     // Creating histograms
-    analysisManager->CreateH1("1", "Edep in central absorber", 200, 0., 0.8*MeV);
-    analysisManager->CreateH1("2", "Edep in North absorber", 200, 0., 0.8*MeV);
-    analysisManager->CreateH1("3", "Edep in East absorber", 200, 0., 0.8*MeV);
-    analysisManager->CreateH1("4", "Edep in South absorber", 200, 0., 0.8*MeV);
-    analysisManager->CreateH1("5", "Edep in West absorber", 200, 0., 0.8*MeV);
-    analysisManager->CreateH1("6", "Scattering angle", 4, 0., 360*degree);
-    analysisManager->CreateH1("7", "Scattering angle (phi)", 360, 0., 360*degree);
-    analysisManager->CreateH1("8", "Delta phi", 360, 0., 360*degree);
+    analysisManager->CreateH1("1", "Edep in central absorber (A)", 800, 0., 0.6*MeV);
+    analysisManager->CreateH1("2", "Edep in North absorber (A)", 800, 0., 0.6*MeV);
+    analysisManager->CreateH1("3", "Edep in East absorber (A)", 800, 0., 0.6*MeV);
+    analysisManager->CreateH1("4", "Edep in South absorber (A)", 800, 0., 0.6*MeV);
+    analysisManager->CreateH1("5", "Edep in West absorber (A)", 800, 0., 0.6*MeV);
+
+    analysisManager->CreateH1("6", "Edep in central absorber (B)", 800, 0., 0.6*MeV);
+    analysisManager->CreateH1("7", "Edep in North absorber (B)", 800, 0., 0.6*MeV);
+    analysisManager->CreateH1("8", "Edep in East absorber (B)", 800, 0., 0.6*MeV);
+    analysisManager->CreateH1("9", "Edep in South absorber (B)", 800, 0., 0.6*MeV);
+    analysisManager->CreateH1("10", "Edep in West absorber (B)", 800, 0., 0.6*MeV);
+
+    analysisManager->CreateH1("11", "Scattering angle", 4, 0., 360*degree);
+    analysisManager->CreateH1("12", "Scattering angle (phi)", 360, 0., 360*degree);
+    analysisManager->CreateH1("13", "Delta phi", 4, 0., 360*degree);
 
     // Creating ntuple
     analysisManager->CreateNtuple("LysoScatter", "Edep");
-    analysisManager->CreateNtupleDColumn("EabsC");
-    analysisManager->CreateNtupleDColumn("EabsN");
-    analysisManager->CreateNtupleDColumn("EabsE");
-    analysisManager->CreateNtupleDColumn("EabsS");
-    analysisManager->CreateNtupleDColumn("EabsW");
+    analysisManager->CreateNtupleDColumn("EabsC_A");
+    analysisManager->CreateNtupleDColumn("EabsN_A");
+    analysisManager->CreateNtupleDColumn("EabsE_A");
+    analysisManager->CreateNtupleDColumn("EabsS_A");
+    analysisManager->CreateNtupleDColumn("EabsW_A");
+
+    analysisManager->CreateNtupleDColumn("EabsC_B");
+    analysisManager->CreateNtupleDColumn("EabsN_B");
+    analysisManager->CreateNtupleDColumn("EabsE_B");
+    analysisManager->CreateNtupleDColumn("EabsS_B");
+    analysisManager->CreateNtupleDColumn("EabsW_B");
+
     analysisManager->CreateNtupleDColumn("ScatAngle");
     analysisManager->CreateNtupleDColumn("ScatPhi");
     analysisManager->CreateNtupleDColumn("DeltaPhi");
@@ -67,7 +81,7 @@ void B4RunAction::BeginOfRunAction(const G4Run* /*run*/)
     G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
 
     // Open an output file
-    G4String fileName = "LysoScatter_3x3x22_ypol_testing";
+    G4String fileName = "LysoScatter_main_randomPol";
     analysisManager->OpenFile(fileName);
 }
 
