@@ -1,30 +1,4 @@
-//
-// ********************************************************************
-// * License and Disclaimer                                           *
-// *                                                                  *
-// * The  Geant4 software  is  copyright of the Copyright Holders  of *
-// * the Geant4 Collaboration.  It is provided  under  the terms  and *
-// * conditions of the Geant4 Software License,  included in the file *
-// * LICENSE and available at  http://cern.ch/geant4/license .  These *
-// * include a list of copyright holders.                             *
-// *                                                                  *
-// * Neither the authors of this software system, nor their employing *
-// * institutes,nor the agencies providing financial support for this *
-// * work  make  any representation or  warranty, express or implied, *
-// * regarding  this  software system or assume any liability for its *
-// * use.  Please see the license in the file  LICENSE  and URL above *
-// * for the full disclaimer and the limitation of liability.         *
-// *                                                                  *
-// * This  code  implementation is the result of  the  scientific and *
-// * technical work of the GEANT4 collaboration.                      *
-// * By using,  copying,  modifying or  distributing the software (or *
-// * any work based  on the software)  you  agree  to acknowledge its *
-// * use  in  resulting  scientific  publications,  and indicate your *
-// * acceptance of all terms of the Geant4 Software license.          *
-// ********************************************************************
-//
-// $Id: B4DetectorConstruction.hh 75215 2013-10-29 16:07:06Z gcosmo $
-// 
+
 /// \file B4DetectorConstruction.hh
 /// \brief Definition of the B4DetectorConstruction class
 
@@ -37,19 +11,6 @@
 class G4VPhysicalVolume;
 class G4GlobalMagFieldMessenger;
 
-/// Detector construction class to define materials and geometry.
-/// The calorimeter is a box made of a given number of layers. A layer consists
-/// of an absorber plate and of a detection gap. The layer is replicated.
-///
-/// Four parameters define the geometry of the calorimeter :
-///
-/// - the thickness of an absorber plate,
-/// - the thickness of a gap,
-/// - the number of layers,
-/// - the transverse size of the calorimeter (the input face is a square).
-///
-/// In addition a transverse uniform magnetic field is defined 
-/// via G4GlobalMagFieldMessenger class.
 
 class B4DetectorConstruction : public G4VUserDetectorConstruction
 {
@@ -63,15 +24,25 @@ class B4DetectorConstruction : public G4VUserDetectorConstruction
 
     // get methods
     //
-    const G4VPhysicalVolume* GetCAbsorberPV() const;
-    const G4VPhysicalVolume* GetNAbsorberPV() const;
-    const G4VPhysicalVolume* GetNEAbsorberPV() const;
-    const G4VPhysicalVolume* GetEAbsorberPV() const;
-    const G4VPhysicalVolume* GetSEAbsorberPV() const;
-    const G4VPhysicalVolume* GetSAbsorberPV() const;
-    const G4VPhysicalVolume* GetSWAbsorberPV() const;
-    const G4VPhysicalVolume* GetWAbsorberPV() const;
-    const G4VPhysicalVolume* GetNWAbsorberPV() const;
+    const G4VPhysicalVolume* GetCAbsorberPV_A() const;
+    const G4VPhysicalVolume* GetNAbsorberPV_A() const;
+    const G4VPhysicalVolume* GetNEAbsorberPV_A() const;
+    const G4VPhysicalVolume* GetEAbsorberPV_A() const;
+    const G4VPhysicalVolume* GetSEAbsorberPV_A() const;
+    const G4VPhysicalVolume* GetSAbsorberPV_A() const;
+    const G4VPhysicalVolume* GetSWAbsorberPV_A() const;
+    const G4VPhysicalVolume* GetWAbsorberPV_A() const;
+    const G4VPhysicalVolume* GetNWAbsorberPV_A() const;
+
+    const G4VPhysicalVolume* GetCAbsorberPV_B() const;
+    const G4VPhysicalVolume* GetNAbsorberPV_B() const;
+    const G4VPhysicalVolume* GetNEAbsorberPV_B() const;
+    const G4VPhysicalVolume* GetEAbsorberPV_B() const;
+    const G4VPhysicalVolume* GetSEAbsorberPV_B() const;
+    const G4VPhysicalVolume* GetSAbsorberPV_B() const;
+    const G4VPhysicalVolume* GetSWAbsorberPV_B() const;
+    const G4VPhysicalVolume* GetWAbsorberPV_B() const;
+    const G4VPhysicalVolume* GetNWAbsorberPV_B() const;
 
     const G4VPhysicalVolume* GetGapPV() const;
 
@@ -83,30 +54,48 @@ class B4DetectorConstruction : public G4VUserDetectorConstruction
 
     // data members
     //
-    static G4ThreadLocal G4GlobalMagFieldMessenger*  fMagFieldMessenger;
+    static G4ThreadLocal G4GlobalMagFieldMessenger *fMagFieldMessenger;
                                       // magnetic field messenger
 
-    G4VPhysicalVolume*   cAbsorberPV; // the absorber physical volume
-    G4VPhysicalVolume*   NAbsorberPV; // the absorber physical volume
-    G4VPhysicalVolume*   EAbsorberPV; // the absorber physical volume
-    G4VPhysicalVolume*   SAbsorberPV; // the absorber physical volume
-    G4VPhysicalVolume*   WAbsorberPV; // the absorber physical volume
-    G4VPhysicalVolume*   NEAbsorberPV; // the absorber physical volume
-    G4VPhysicalVolume*   SEAbsorberPV; // the absorber physical volume
-    G4VPhysicalVolume*   SWAbsorberPV; // the absorber physical volume
-    G4VPhysicalVolume*   NWAbsorberPV; // the absorber physical volume
+    G4VPhysicalVolume*   cAbsorberPV_A; // the absorber physical volume
+    G4VPhysicalVolume*   NAbsorberPV_A; // the absorber physical volume
+    G4VPhysicalVolume*   EAbsorberPV_A; // the absorber physical volume
+    G4VPhysicalVolume*   SAbsorberPV_A; // the absorber physical volume
+    G4VPhysicalVolume*   WAbsorberPV_A; // the absorber physical volume
+    G4VPhysicalVolume*   NEAbsorberPV_A; // the absorber physical volume
+    G4VPhysicalVolume*   SEAbsorberPV_A; // the absorber physical volume
+    G4VPhysicalVolume*   SWAbsorberPV_A; // the absorber physical volume
+    G4VPhysicalVolume*   NWAbsorberPV_A; // the absorber physical volume
 
+    G4VPhysicalVolume*   cAbsorberPV_B; // the absorber physical volume
+    G4VPhysicalVolume*   NAbsorberPV_B; // the absorber physical volume
+    G4VPhysicalVolume*   EAbsorberPV_B; // the absorber physical volume
+    G4VPhysicalVolume*   SAbsorberPV_B; // the absorber physical volume
+    G4VPhysicalVolume*   WAbsorberPV_B; // the absorber physical volume
+    G4VPhysicalVolume*   NEAbsorberPV_B; // the absorber physical volume
+    G4VPhysicalVolume*   SEAbsorberPV_B; // the absorber physical volume
+    G4VPhysicalVolume*   SWAbsorberPV_B; // the absorber physical volume
+    G4VPhysicalVolume*   NWAbsorberPV_B; // the absorber physical volume
 
-    G4VPhysicalVolume*   cFoilPV;
-    G4VPhysicalVolume*   nFoilPV;
-    G4VPhysicalVolume*   eFoilPV;
-    G4VPhysicalVolume*   sFoilPV;
-    G4VPhysicalVolume*   wFoilPV;
-    G4VPhysicalVolume*   neFoilPV;
-    G4VPhysicalVolume*   seFoilPV;
-    G4VPhysicalVolume*   swFoilPV;
-    G4VPhysicalVolume*   nwFoilPV;
-
+    //The wrappings for the crystals
+    G4VPhysicalVolume*   cFoilPV_A;
+    G4VPhysicalVolume*   nFoilPV_A;
+    G4VPhysicalVolume*   eFoilPV_A;
+    G4VPhysicalVolume*   sFoilPV_A;
+    G4VPhysicalVolume*   wFoilPV_A;
+    G4VPhysicalVolume*   neFoilPV_A;
+    G4VPhysicalVolume*   seFoilPV_A;
+    G4VPhysicalVolume*   swFoilPV_A;
+    G4VPhysicalVolume*   nwFoilPV_A;
+    G4VPhysicalVolume*   cFoilPV_B;
+    G4VPhysicalVolume*   nFoilPV_B;
+    G4VPhysicalVolume*   eFoilPV_B;
+    G4VPhysicalVolume*   sFoilPV_B;
+    G4VPhysicalVolume*   wFoilPV_B;
+    G4VPhysicalVolume*   neFoilPV_B;
+    G4VPhysicalVolume*   seFoilPV_B;
+    G4VPhysicalVolume*   swFoilPV_B;
+    G4VPhysicalVolume*   nwFoilPV_B;
 
     G4VPhysicalVolume*   fGapPV;      // the gap physical volume
 
@@ -115,32 +104,64 @@ class B4DetectorConstruction : public G4VUserDetectorConstruction
 
 // inline functions
 
-inline const G4VPhysicalVolume* B4DetectorConstruction::GetCAbsorberPV() const {
-  return cAbsorberPV;
+// inline functions
+//Functions to return the crystals in array A
+inline const G4VPhysicalVolume* B4DetectorConstruction::GetCAbsorberPV_A() const {
+    return cAbsorberPV_A;
 }
-inline const G4VPhysicalVolume* B4DetectorConstruction::GetNAbsorberPV() const {
-    return NAbsorberPV;
+inline const G4VPhysicalVolume* B4DetectorConstruction::GetNAbsorberPV_A() const {
+    return NAbsorberPV_A;
 }
-inline const G4VPhysicalVolume* B4DetectorConstruction::GetNEAbsorberPV() const {
-    return NEAbsorberPV;
+inline const G4VPhysicalVolume* B4DetectorConstruction::GetNEAbsorberPV_A() const {
+    return NEAbsorberPV_A;
 }
-inline const G4VPhysicalVolume* B4DetectorConstruction::GetEAbsorberPV() const {
-    return EAbsorberPV;
+inline const G4VPhysicalVolume* B4DetectorConstruction::GetEAbsorberPV_A() const {
+    return EAbsorberPV_A;
 }
-inline const G4VPhysicalVolume* B4DetectorConstruction::GetSEAbsorberPV() const {
-    return SEAbsorberPV;
+inline const G4VPhysicalVolume* B4DetectorConstruction::GetSEAbsorberPV_A() const {
+    return SEAbsorberPV_A;
 }
-inline const G4VPhysicalVolume* B4DetectorConstruction::GetSAbsorberPV() const {
-    return SAbsorberPV;
+inline const G4VPhysicalVolume* B4DetectorConstruction::GetSAbsorberPV_A() const {
+    return SAbsorberPV_A;
 }
-inline const G4VPhysicalVolume* B4DetectorConstruction::GetSWAbsorberPV() const {
-    return SWAbsorberPV;
+inline const G4VPhysicalVolume* B4DetectorConstruction::GetSWAbsorberPV_A() const {
+    return SWAbsorberPV_A;
 }
-inline const G4VPhysicalVolume* B4DetectorConstruction::GetWAbsorberPV() const {
-    return WAbsorberPV;
+inline const G4VPhysicalVolume* B4DetectorConstruction::GetWAbsorberPV_A() const {
+    return WAbsorberPV_A;
 }
-inline const G4VPhysicalVolume* B4DetectorConstruction::GetNWAbsorberPV() const {
-    return NWAbsorberPV;
+inline const G4VPhysicalVolume* B4DetectorConstruction::GetNWAbsorberPV_A() const {
+    return NWAbsorberPV_A;
+}
+
+
+//Functions to return the crystals in array B
+inline const G4VPhysicalVolume* B4DetectorConstruction::GetCAbsorberPV_B() const {
+    return cAbsorberPV_B;
+}
+inline const G4VPhysicalVolume* B4DetectorConstruction::GetNAbsorberPV_B() const {
+    return NAbsorberPV_B;
+}
+inline const G4VPhysicalVolume* B4DetectorConstruction::GetNEAbsorberPV_B() const {
+    return NEAbsorberPV_B;
+}
+inline const G4VPhysicalVolume* B4DetectorConstruction::GetEAbsorberPV_B() const {
+    return EAbsorberPV_B;
+}
+inline const G4VPhysicalVolume* B4DetectorConstruction::GetSEAbsorberPV_B() const {
+    return SEAbsorberPV_B;
+}
+inline const G4VPhysicalVolume* B4DetectorConstruction::GetSAbsorberPV_B() const {
+    return SAbsorberPV_B;
+}
+inline const G4VPhysicalVolume* B4DetectorConstruction::GetSWAbsorberPV_B() const {
+    return SWAbsorberPV_B;
+}
+inline const G4VPhysicalVolume* B4DetectorConstruction::GetWAbsorberPV_B() const {
+    return WAbsorberPV_B;
+}
+inline const G4VPhysicalVolume* B4DetectorConstruction::GetNWAbsorberPV_B() const {
+    return NWAbsorberPV_B;
 }
 
 

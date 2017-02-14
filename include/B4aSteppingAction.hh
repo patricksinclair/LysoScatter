@@ -60,6 +60,9 @@ private:
     const B4DetectorConstruction* fDetConstruction;
     B4aEventAction*  fEventAction;
     G4bool alreadyRecorded;
+
+    G4bool scatNorthA, scatEastA, scatSouthA, scatWestA;
+    G4bool scatNorthB, scatEastB, scatSouthB, scatWestB;
 };
 
 
